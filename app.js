@@ -59,6 +59,6 @@ async function cargarContador() {
   const colRef = collection(db, "boletos");
   const snapshot = await getCountFromServer(colRef);
  contadorDiv.innerText =
-  `🎫 Boletos vendidos: ${snapshot.data().count} / ${MAX_BOLETOS}`;
+  "Boletos vendidos: " + snapshot.data().count + " / " + MAX_BOLETOS;
 
 cargarContador();
