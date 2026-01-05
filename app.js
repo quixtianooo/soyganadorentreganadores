@@ -6,7 +6,6 @@ import {
   getCountFromServer
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 FIREBASE CONFIG 🔥 */
 const firebaseConfig = {
   apiKey: "AIzaSyA-JTJxPMMl3cu4xz3annvIPuOCDi_Bd6A",
   authDomain: "soy-ganador.firebaseapp.com",
@@ -20,12 +19,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* HTML */
 const btn = document.getElementById("buyBtn");
 const result = document.getElementById("result");
 const contadorDiv = document.getElementById("contador");
 
-/* CONFIG */
 const MAX_BOLETOS = 100000;
 const MAX_NUMERO = 60000;
 
@@ -43,7 +40,6 @@ btn.addEventListener("click", async () => {
     return;
   }
 
-  // Número aleatorio (SE PUEDE REPETIR)
   const numero = Math.floor(Math.random() * MAX_NUMERO) + 1;
 
   await addDoc(colRef, {
