@@ -1,10 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore,
-  doc,
-  getDoc,
-  setDoc,
   collection,
+  addDoc,
   getCountFromServer
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -22,20 +20,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ELEMENTOS HTML */
+/* HTML */
 const btn = document.getElementById("buyBtn");
 const result = document.getElementById("result");
 const contadorDiv = document.getElementById("contador");
 
 /* CONFIG */
-const MAX_BOLETOS = 60000;
+const MAX_BOLETOS = 100000;
+const MAX_NUMERO = 60000;
 
-/* CLICK */
 btn.addEventListener("click", async () => {
   btn.disabled = true;
   result.innerText = "⏳ Generando tu boleto...";
 
-  // Contar boletos vendidos
   const colRef = collection(db, "boletos");
   const snapshot = await getCountFromServer(colRef);
   const vendidos = snapshot.data().count;
@@ -46,18 +43,10 @@ btn.addEventListener("click", async () => {
     return;
   }
 
-  // Generar número aleatorio sin repetir
-  let numero, ref, existe = true;
+  // Número aleatorio (SE PUEDE REPETIR)
+  const numero = Math.floor(Math.random() * MAX_NUMERO) + 1;
 
-  while (existe) {
-    numero = Math.floor(Math.random() * MAX_BOLETOS) + 1;
-    ref = doc(db, "boletos", numero.toString());
-    const snap = await getDoc(ref);
-    existe = snap.exists();
-  }
-
-  // Guardar boleto
-  await setDoc(ref, {
+  await addDoc(colRef, {
     numero: numero,
     fecha: new Date(),
     estado: "vendido"
@@ -67,9 +56,9 @@ btn.addEventListener("click", async () => {
     "🎟️ Tu boleto es: " + numero.toString().padStart(5, "0");
 
   btn.disabled = false;
+  cargarContador();
 });
 
-/* MOSTRAR CONTADOR */
 async function cargarContador() {
   const colRef = collection(db, "boletos");
   const snapshot = await getCountFromServer(colRef);
